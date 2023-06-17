@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BMI Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #000000, #282c34);
+      margin: 0;
+      padding: 0;
+      color: #ffffff;
+    }
+
+    .container {
+      width: 500px;
+      margin: 40px auto;
+      background-color: #1f2329;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      height: 500px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffffff;
+      margin-top: 0;
+    }
+
+    ul.nav {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    ul.nav li {
+      display: inline-block;
+    }
+
+    ul.nav li a {
+      display: block;
+      color: #ffffff;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    ul.nav li a:hover {
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    #home {
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    #result {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 20px;
+      color: #ffffff;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #e81d1d;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <ul class="nav">
+    <li><a id="home" href="#container">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#calculator">BMI Calculator</a></li>
+  </ul>
+
+  <div class="container" id="container">
+    <h1>Welcome to BMI Calculator</h1>
+    <p>
+      This website provides a simple BMI (Body Mass Index) calculator to help you assess your body weight based on your height and weight measurements. BMI is a widely used measure to determine whether a person is underweight, normal weight, overweight, or obese.
+    </p>
+    <p>
+      To use the BMI calculator, click on the "BMI Calculator" link in the navigation bar above.
+    </p>
+  </div>
+
+  <div id="about" style="display:none;">
+    <div class="container">
+      <h1>About BMI</h1>
+      <p>
+        Body Mass Index (BMI) is a measure of body fat based on a person's weight and height. It is commonly used to assess whether a person has a healthy body weight or is underweight, overweight, or obese.
+        The BMI categories are as follows:
+      </p>
+      <ul>
+        <li>Underweight: BMI less than 18.5</li>
+        <li>Normal weight: BMI 18.5 - 24.9</li>
+        <li>Overweight: BMI 25 - 29.9</li>
+        <li>Obese: BMI 30 or greater</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="calculator" style="display:none;">
+  <div class="container">
+    <h1>BMI Calculator</h1>
+    <form onsubmit="calculateBMI(event)">
+      <label for="weight">Weight:</label>
+      <input type="number" id="weight" step="0.01" required>
+      <select id="weightUnit">
+        <option value="kg" selected>Kg</option>
+        <option value="lb">Lb</option>
+      </select>
+
+      <br>
+
+      <label for="height">Height:</label>
+      <input type="number" id="height" step="0.01" required>
+      <select id="heightUnit">
+        <option value="cm" selected>Cm</option>
+        <option value="in">In</option>
+      </select>
+
+      <button type="submit">Calculate BMI</button>
+
+      <div id="result"></div>
+    </form>
+  </div>
+</div>
+
+
+  <script>
+    function calculateBMI(event) {
+      event.preventDefault();
+
+      var weight = parseFloat(document.getElementById('weight').value);
+      var height = parseFloat(document.getElementById('height').value);
+      var weightUnit = document.getElementById('weightUnit').value;
+      var heightUnit = document.getElementById('heightUnit').value;
+
+      // Convert weight and height to kg and cm, respectively
+      if (weightUnit === 'lb') {
+        weight = weight * 0.453592;
+      }
+
+      if (heightUnit === 'in') {
+        height = height * 2.54;
+      }
+
+      if (isNaN(weight) || isNaN(height) || weight <= 0 || height <= 0) {
+        document.getElementById('result').innerHTML = 'Please enter valid weight and height.';
+        return;
+      }
+
+      var bmi = weight / ((height / 100) * (height / 100));
+      var bmiCategory = '';
+
+      if (bmi < 18.5) {
+        bmiCategory = 'Underweight';
+      } else if (bmi >= 18.5 && bmi < 25) {
+        bmiCategory = 'Normal weight';
+      } else if (bmi >= 25 && bmi < 30) {
+        bmiCategory = 'Overweight';
+      } else {
+        bmiCategory = 'Obese';
+      }
+
+      var resultText = 'Your BMI is: ' + bmi.toFixed(2) + '<br>';
+      resultText += 'Category: ' + bmiCategory + '<br>';
+
+      // BMI ranges for underweight, normal weight, and overweight
+      resultText += '<br>BMI Ranges:<br>';
+      resultText += 'Underweight: Less than 18.5<br>';
+      resultText += 'Normal weight: 18.5 - 24.9<br>';
+      resultText += 'Overweight: 25 - 29.9<br>';
+
+      document.getElementById('result').innerHTML = resultText;
+    }
+
+    document.getElementById('home').addEventListener('click', function() {
+      document.getElementById('container').style.display = 'block';
+      document.getElementById('about').style.display = 'none';
+      document.getElementById('calculator').style.display = 'none';
+    });
+
+    document.querySelector('a[href="#about"]').addEventListener('click', function() {
+      document.getElementById('container').style.display = 'none';
+      document.getElementById('about').style.display = 'block';
+      document.getElementById('calculator').style.display = 'none';
+    });
+
+    document.querySelector('a[href="#calculator"]').addEventListener('click', function() {
+      document.getElementById('container').style.display = 'none';
+      document.getElementById('about').style.display = 'none';
+      document.getElementById('calculator').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
